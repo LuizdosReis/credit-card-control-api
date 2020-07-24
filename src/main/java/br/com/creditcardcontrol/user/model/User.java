@@ -46,6 +46,11 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @NotEmpty(message = "The email not be empty")
+    private String email;
+
+    private boolean enabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
