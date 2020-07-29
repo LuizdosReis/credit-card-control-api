@@ -4,16 +4,19 @@ import br.com.creditcardcontrol.user.dto.UserRequest;
 import br.com.creditcardcontrol.user.model.User;
 import br.com.creditcardcontrol.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+
 
     @Transactional
     public void create(UserRequest userRequest){
@@ -27,4 +30,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public User loadUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 }

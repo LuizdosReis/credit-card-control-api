@@ -24,10 +24,4 @@ public class UserController {
     public void create(@RequestBody UserRequest userRequest){
         userService.create(userRequest);
     }
-
-
-
-
-
-
 }
