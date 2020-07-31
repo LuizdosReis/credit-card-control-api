@@ -18,7 +18,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Entity
 @Data
@@ -35,7 +35,7 @@ public class Expense {
     private Long id;
 
     @NotNull
-    private LocalDate date;
+    private ZonedDateTime date;
 
     @NotNull
     @Digits(fraction=2, integer = 9)

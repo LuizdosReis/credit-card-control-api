@@ -1,6 +1,7 @@
 package br.com.creditcardcontrol.expenses.service;
 
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
+import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
 import br.com.creditcardcontrol.expenses.model.Expense;
 import br.com.creditcardcontrol.expenses.repository.ExpenseRepository;
 import br.com.creditcardcontrol.user.Service.UserService;
@@ -17,13 +18,19 @@ public class ExpensesServiceImpl implements ExpensesService {
     ExpenseRepository repository;
 
     @Override
-    public void save(ExpenseRequest dto) {
+    public ExpenseResponse save(ExpenseRequest dto) {
         Expense expense = Expense.builder()
                 .date(dto.getDate())
                 .value(dto.getValue())
                 .user(userService.getCurrentUser())
                 .build();
 
-        repository.save(expense);
+        Expense expenseSaved = repository.save(expense);
+
+        return ExpenseResponse.builder()
+                .id(expenseSaved.getId())
+                .date(expenseSaved.getDate())
+                .value(expenseSaved.getValue())
+                .build();
     }
 }
