@@ -7,7 +7,11 @@ import br.com.creditcardcontrol.expenses.repository.ExpenseRepository;
 import br.com.creditcardcontrol.user.Service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @AllArgsConstructor
@@ -18,6 +22,7 @@ public class ExpensesServiceImpl implements ExpensesService {
     ExpenseRepository repository;
 
     @Override
+    @Transactional
     public ExpenseResponse save(ExpenseRequest dto) {
         Expense expense = Expense.builder()
                 .date(dto.getDate())
@@ -27,10 +32,23 @@ public class ExpensesServiceImpl implements ExpensesService {
 
         Expense expenseSaved = repository.save(expense);
 
+        return mapToExpenseResponse(expenseSaved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ExpenseResponse> getAll(Pageable page) {
+        return repository.findAllByUser(userService.getCurrentUser(), page)
+                .map(this::mapToExpenseResponse);
+    }
+
+    private ExpenseResponse mapToExpenseResponse(Expense expense) {
         return ExpenseResponse.builder()
-                .id(expenseSaved.getId())
-                .date(expenseSaved.getDate())
-                .value(expenseSaved.getValue())
+                .id(expense.getId())
+                .date(expense.getDate())
+                .value(expense.getValue())
                 .build();
     }
+
+
 }
