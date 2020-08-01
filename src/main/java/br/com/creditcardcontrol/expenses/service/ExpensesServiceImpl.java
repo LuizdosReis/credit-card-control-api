@@ -26,9 +26,7 @@ public class ExpensesServiceImpl implements ExpensesService {
     @Override
     @Transactional
     public ExpenseResponse save(ExpenseRequest dto) {
-        Expense expense = expenseMapper.mapToModel(dto);
-
-        expense.setUser(userService.getCurrentUser());
+        Expense expense = expenseMapper.mapToModel(dto, userService.getCurrentUser());
 
         Expense expenseSaved = repository.save(expense);
 
