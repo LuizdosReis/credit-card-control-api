@@ -44,7 +44,7 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     public ExpenseResponse getBy(Long id) {
-        Expense expense = repository.findById(id)
+        Expense expense = repository.findByIdAndUser(id, userService.getCurrentUser())
                 .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
         return expenseMapper.mapToDto(expense);
     }
