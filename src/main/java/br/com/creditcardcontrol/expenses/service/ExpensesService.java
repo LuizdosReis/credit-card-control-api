@@ -9,4 +9,5 @@ public interface ExpensesService {
 
     ExpenseResponse save(ExpenseRequest dto);
     Page<ExpenseResponse> getAll(Pageable page);
+    ExpenseResponse getBy(Long id);
 }

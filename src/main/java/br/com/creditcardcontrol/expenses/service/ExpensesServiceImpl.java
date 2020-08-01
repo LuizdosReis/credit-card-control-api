@@ -41,4 +41,11 @@ public class ExpensesServiceImpl implements ExpensesService {
         return repository.findAllByUser(userService.getCurrentUser(), page)
                 .map(expenseMapper::mapToDto);
     }
+
+    @Override
+    public ExpenseResponse getBy(Long id) {
+        Expense expense = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
+        return expenseMapper.mapToDto(expense);
+    }
 }

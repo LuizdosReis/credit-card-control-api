@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,5 +34,10 @@ public class ExpensesController {
     @GetMapping
     public ResponseEntity<Page<ExpenseResponse>> getAll(Pageable page) {
         return ResponseEntity.ok(this.service.getAll(page));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExpenseResponse> getBy(@PathVariable Long id) {
+        return ResponseEntity.ok(this.service.getBy(id));
     }
 }
