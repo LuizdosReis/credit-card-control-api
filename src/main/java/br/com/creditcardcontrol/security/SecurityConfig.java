@@ -1,6 +1,7 @@
 package br.com.creditcardcontrol.security;
 
 import br.com.creditcardcontrol.user.Service.UserService;
+import br.com.creditcardcontrol.user.controller.UserController;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/**/user/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/**/" + UserController.BASE_URL + "**").permitAll()
                 .antMatchers("/**/auth/**").permitAll()
                 .anyRequest()
                 .authenticated();
