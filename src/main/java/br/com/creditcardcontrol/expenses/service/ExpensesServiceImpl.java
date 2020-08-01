@@ -2,6 +2,7 @@ package br.com.creditcardcontrol.expenses.service;
 
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
+import br.com.creditcardcontrol.expenses.mapper.ExpenseMapper;
 import br.com.creditcardcontrol.expenses.model.Expense;
 import br.com.creditcardcontrol.expenses.repository.ExpenseRepository;
 import br.com.creditcardcontrol.user.Service.UserService;
@@ -18,8 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class ExpensesServiceImpl implements ExpensesService {
 
-    UserService userService;
-    ExpenseRepository repository;
+    private final UserService userService;
+    private final ExpenseRepository repository;
+    private final ExpenseMapper expenseMapper;
 
     @Override
     @Transactional
@@ -32,23 +34,13 @@ public class ExpensesServiceImpl implements ExpensesService {
 
         Expense expenseSaved = repository.save(expense);
 
-        return mapToExpenseResponse(expenseSaved);
+        return expenseMapper.mapToDto(expenseSaved);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<ExpenseResponse> getAll(Pageable page) {
         return repository.findAllByUser(userService.getCurrentUser(), page)
-                .map(this::mapToExpenseResponse);
+                .map(expenseMapper::mapToDto);
     }
-
-    private ExpenseResponse mapToExpenseResponse(Expense expense) {
-        return ExpenseResponse.builder()
-                .id(expense.getId())
-                .date(expense.getDate())
-                .value(expense.getValue())
-                .build();
-    }
-
-
 }
