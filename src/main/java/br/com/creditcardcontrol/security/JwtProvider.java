@@ -3,6 +3,7 @@ package br.com.creditcardcontrol.security;
 import br.com.creditcardcontrol.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Date;
 @Service
 public class JwtProvider {
 
+    @Getter
     @Value("${jwt.expiration.time}")
     private Long jwtExpirationInMillis;
 
@@ -49,6 +51,15 @@ public class JwtProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMillis))
                 .signWith(getPrivateKey())
                 .compact();
+    }
+
+    public String generateTokenWithUsername(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMillis))
+                .signWith(getPrivateKey())
+                .compact();
+
     }
 
     private PrivateKey getPrivateKey() {
@@ -81,5 +92,4 @@ public class JwtProvider {
 
         return claims.getSubject();
     }
-
 }
