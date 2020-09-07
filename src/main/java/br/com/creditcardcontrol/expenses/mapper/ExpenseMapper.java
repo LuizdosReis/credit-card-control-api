@@ -6,6 +6,7 @@ import br.com.creditcardcontrol.expenses.model.Expense;
 import br.com.creditcardcontrol.user.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ExpenseMapper {
@@ -14,4 +15,6 @@ public interface ExpenseMapper {
     
     @Mapping(target = "id", ignore = true)
     Expense mapToModel(ExpenseRequest dto, User user);
+
+    void merge(@MappingTarget Expense expense, ExpenseRequest source);
 }

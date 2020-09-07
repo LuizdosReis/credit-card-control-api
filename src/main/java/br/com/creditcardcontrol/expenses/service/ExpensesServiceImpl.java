@@ -46,4 +46,15 @@ public class ExpensesServiceImpl implements ExpensesService {
                 .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
         return expenseMapper.mapToDto(expense);
     }
+
+    @Override
+    @Transactional
+    public ExpenseResponse update(Long id, ExpenseRequest dto) {
+        Expense expense = repository.findByIdAndUser(id, userService.getCurrentUser())
+                .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
+
+        expenseMapper.merge(expense, dto);
+
+        return expenseMapper.mapToDto(expense);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 public interface ExpensesService {
 
     ExpenseResponse save(ExpenseRequest dto);
+    ExpenseResponse update(Long id, ExpenseRequest dto);
     Page<ExpenseResponse> getAll(Pageable page);
     ExpenseResponse getBy(Long id);
 }
