@@ -11,4 +11,5 @@ public interface ExpensesService {
     ExpenseResponse update(Long id, ExpenseRequest dto);
     Page<ExpenseResponse> getAll(Pageable page);
     ExpenseResponse getBy(Long id);
+    void delete(Long id);
 }
