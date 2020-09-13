@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.YearMonth;
+
 @RestController
 @RequestMapping(path = ExpensesController.BASE_URL)
 @AllArgsConstructor
@@ -34,8 +36,8 @@ public class ExpensesController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ExpenseResponse>> getAll(Pageable page) {
-        return ResponseEntity.ok(this.service.getAll(page));
+    public ResponseEntity<Page<ExpenseResponse>> getAll(YearMonth yearMonth, Pageable page) {
+        return ResponseEntity.ok(this.service.getAll(yearMonth, page));
     }
 
     @GetMapping("/{id}")

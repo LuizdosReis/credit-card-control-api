@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
+
 
 @Service
 @AllArgsConstructor
@@ -35,8 +37,8 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ExpenseResponse> getAll(Pageable page) {
-        return repository.findAllByUser(userService.getCurrentUser(), page)
+    public Page<ExpenseResponse> getAll(YearMonth yearMonth, Pageable page) {
+        return repository.findAllByUser(userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page)
                 .map(expenseMapper::mapToDto);
     }
 
