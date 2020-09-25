@@ -1,5 +1,6 @@
 package br.com.creditcardcontrol.expenses.service;
 
+import br.com.creditcardcontrol.chart.dto.Data;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
 import br.com.creditcardcontrol.expenses.mapper.ExpenseMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
+import java.util.Set;
 
 
 @Service
@@ -38,8 +40,9 @@ public class ExpensesServiceImpl implements ExpensesService {
     @Override
     @Transactional(readOnly = true)
     public Page<ExpenseResponse> getAll(YearMonth yearMonth, Pageable page) {
-        return repository.findAllByUser(userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page)
-                .map(expenseMapper::mapToDto);
+        return repository.findAllByUser(
+                    userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page
+                ).map(expenseMapper::mapToDto);
     }
 
     @Override
@@ -67,4 +70,12 @@ public class ExpensesServiceImpl implements ExpensesService {
 
         repository.delete(expense);
     }
+
+    @Override
+    public Set<Data> getExpenseData(YearMonth yearMonth) {
+        return repository.findExpenseDataByUserAndYearMonth(
+                userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear());
+    }
+
+
 }
