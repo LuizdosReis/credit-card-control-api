@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -39,7 +38,6 @@ public class Expense {
 
     @NotNull
     @Digits(fraction=2, integer = 9)
-    @DecimalMin(value = "0.00", inclusive = false)
     private BigDecimal value;
 
     @NotNull

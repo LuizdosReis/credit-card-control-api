@@ -1,5 +1,6 @@
 package br.com.creditcardcontrol.expenses.service;
 
+import br.com.creditcardcontrol.chart.dto.Data;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
 import br.com.creditcardcontrol.expenses.mapper.ExpenseMapper;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.YearMonth;
+import java.util.Set;
 
 
 @Service
@@ -35,9 +39,10 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ExpenseResponse> getAll(Pageable page) {
-        return repository.findAllByUser(userService.getCurrentUser(), page)
-                .map(expenseMapper::mapToDto);
+    public Page<ExpenseResponse> getAll(YearMonth yearMonth, Pageable page) {
+        return repository.findAllByUser(
+                    userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page
+                ).map(expenseMapper::mapToDto);
     }
 
     @Override
@@ -46,4 +51,31 @@ public class ExpensesServiceImpl implements ExpensesService {
                 .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
         return expenseMapper.mapToDto(expense);
     }
+
+    @Override
+    @Transactional
+    public ExpenseResponse update(Long id, ExpenseRequest dto) {
+        Expense expense = repository.findByIdAndUser(id, userService.getCurrentUser())
+                .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
+
+        expenseMapper.merge(expense, dto);
+
+        return expenseMapper.mapToDto(expense);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Expense expense = repository.findByIdAndUser(id, userService.getCurrentUser())
+                .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
+
+        repository.delete(expense);
+    }
+
+    @Override
+    public Set<Data> getExpenseData(YearMonth yearMonth) {
+        return repository.findExpenseDataByUserAndYearMonth(
+                userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear());
+    }
+
+
 }

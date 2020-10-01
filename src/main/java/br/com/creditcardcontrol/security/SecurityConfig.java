@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/**/" + UserController.BASE_URL + "**").permitAll()
+                .antMatchers(HttpMethod.POST, "/**/" + UserController.BASE_URL + "**").permitAll()
                 .antMatchers("/**/auth/**").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
