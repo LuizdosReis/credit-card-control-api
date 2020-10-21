@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = ExpensesController.BASE_URL)
@@ -31,8 +32,8 @@ public class ExpensesController {
 
 
     @PostMapping
-    public ResponseEntity<ExpenseResponse> create(@RequestBody ExpenseRequest dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(dto));
+    public ResponseEntity<List<ExpenseResponse>> create(@RequestBody List<ExpenseRequest> dtoList) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(dtoList));
     }
 
     @GetMapping

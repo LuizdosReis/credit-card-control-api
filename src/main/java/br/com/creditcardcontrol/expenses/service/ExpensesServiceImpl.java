@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,12 +31,18 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     @Transactional
-    public ExpenseResponse save(ExpenseRequest dto) {
-        Expense expense = expenseMapper.mapToModel(dto, userService.getCurrentUser());
+    public List<ExpenseResponse> save(List<ExpenseRequest> dtoList) {
 
-        Expense expenseSaved = repository.save(expense);
+        List<Expense> expenses = dtoList.stream()
+                .map(dto -> expenseMapper.mapToModel(dto, userService.getCurrentUser()))
+                .collect(Collectors.toList());
 
-        return expenseMapper.mapToDto(expenseSaved);
+
+        List<Expense> expenseSavedList = repository.saveAll(expenses);
+
+        return expenseSavedList.stream()
+                .map(expenseMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
