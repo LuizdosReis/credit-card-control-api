@@ -5,6 +5,7 @@ import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
 import br.com.creditcardcontrol.expenses.mapper.ExpenseMapper;
 import br.com.creditcardcontrol.expenses.model.Expense;
+import br.com.creditcardcontrol.expenses.model.Installment;
 import br.com.creditcardcontrol.expenses.repository.ExpenseRepository;
 import br.com.creditcardcontrol.user.Service.UserService;
 import lombok.AllArgsConstructor;
@@ -14,10 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -31,18 +31,26 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     @Transactional
-    public List<ExpenseResponse> save(List<ExpenseRequest> dtoList) {
+    public ExpenseResponse save(ExpenseRequest dto) {
+        Expense expense = expenseMapper.toEntity(dto, userService.getCurrentUser());
 
-        List<Expense> expenses = dtoList.stream()
-                .map(dto -> expenseMapper.mapToModel(dto, userService.getCurrentUser()))
-                .collect(Collectors.toList());
+        verifyInstallmentValue(expense);
 
+        Expense savedExpense = repository.save(expense);
 
-        List<Expense> expenseSavedList = repository.saveAll(expenses);
+        return expenseMapper.mapToDto(savedExpense);
+    }
 
-        return expenseSavedList.stream()
-                .map(expenseMapper::mapToDto)
-                .collect(Collectors.toList());
+    private void verifyInstallmentValue(Expense expense){
+        if(expense.getInstallments().isEmpty()) return;
+
+        BigDecimal installmentTotalValue = expense.getInstallments().stream()
+                .map(Installment::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (installmentTotalValue.compareTo(expense.getValue()) != 0 ) {
+            throw new RuntimeException("Installments total values is not equals expense total value");
+        }
     }
 
     @Override
@@ -69,6 +77,8 @@ public class ExpensesServiceImpl implements ExpensesService {
         expenseMapper.merge(expense, dto);
 
         return expenseMapper.mapToDto(expense);
+
+
     }
 
     @Override

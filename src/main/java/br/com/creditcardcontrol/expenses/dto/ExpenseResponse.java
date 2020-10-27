@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -17,4 +18,5 @@ public class ExpenseResponse {
     private Long id;
     private ZonedDateTime date;
     private BigDecimal value;
+    private Set<InstallmentResponse> installments;
 }
