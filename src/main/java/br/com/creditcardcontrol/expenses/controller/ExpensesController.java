@@ -1,5 +1,6 @@
 package br.com.creditcardcontrol.expenses.controller;
 
+import br.com.creditcardcontrol.expenses.dto.ExpenseInstallmentResponse;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
 import br.com.creditcardcontrol.expenses.service.ExpensesService;
@@ -36,7 +37,7 @@ public class ExpensesController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ExpenseResponse>> getAll(YearMonth yearMonth, Pageable page) {
+    public ResponseEntity<Page<ExpenseInstallmentResponse>> getAll(YearMonth yearMonth, Pageable page) {
         return ResponseEntity.ok(this.service.getAll(yearMonth, page));
     }
 

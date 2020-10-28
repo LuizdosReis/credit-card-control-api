@@ -1,6 +1,7 @@
 package br.com.creditcardcontrol.expenses.service;
 
 import br.com.creditcardcontrol.chart.dto.Data;
+import br.com.creditcardcontrol.expenses.dto.ExpenseInstallmentResponse;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ public interface ExpensesService {
 
     ExpenseResponse save(ExpenseRequest dto);
     ExpenseResponse update(Long id, ExpenseRequest dto);
-    Page<ExpenseResponse> getAll(YearMonth yearMonth, Pageable page);
+    Page<ExpenseInstallmentResponse> getAll(YearMonth yearMonth, Pageable page);
     Set<Data> getExpenseData(YearMonth yearMonth);
     ExpenseResponse getBy(Long id);
     void delete(Long id);

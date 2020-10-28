@@ -1,11 +1,14 @@
 package br.com.creditcardcontrol.expenses.service;
 
 import br.com.creditcardcontrol.chart.dto.Data;
+import br.com.creditcardcontrol.expenses.dto.ExpenseInstallmentResponse;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
+import br.com.creditcardcontrol.expenses.mapper.ExpenseInstallmentMapper;
 import br.com.creditcardcontrol.expenses.mapper.ExpenseMapper;
 import br.com.creditcardcontrol.expenses.model.Expense;
 import br.com.creditcardcontrol.expenses.model.Installment;
+import br.com.creditcardcontrol.expenses.repository.ExpenseInstalmentViewRepository;
 import br.com.creditcardcontrol.expenses.repository.ExpenseRepository;
 import br.com.creditcardcontrol.user.Service.UserService;
 import lombok.AllArgsConstructor;
@@ -27,7 +30,9 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     private final UserService userService;
     private final ExpenseRepository repository;
+    private final ExpenseInstalmentViewRepository expenseInstalmentViewRepository;
     private final ExpenseMapper expenseMapper;
+    private final ExpenseInstallmentMapper expenseInstallmentMapper;
 
     @Override
     @Transactional
@@ -55,10 +60,10 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ExpenseResponse> getAll(YearMonth yearMonth, Pageable page) {
-        return repository.findAllByUser(
-                    userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page
-                ).map(expenseMapper::mapToDto);
+    public Page<ExpenseInstallmentResponse> getAll(YearMonth yearMonth, Pageable page) {
+        return expenseInstalmentViewRepository
+                .findAllByUser(userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page)
+                .map(expenseInstallmentMapper::toDto);
     }
 
     @Override
