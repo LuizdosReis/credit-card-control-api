@@ -3,6 +3,7 @@ package br.com.creditcardcontrol.expenses.controller;
 import br.com.creditcardcontrol.expenses.dto.ExpenseInstallmentResponse;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
+import br.com.creditcardcontrol.expenses.dto.ExpenseUpdateRequest;
 import br.com.creditcardcontrol.expenses.service.ExpensesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class ExpensesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExpenseResponse> updateBy(@PathVariable Long id, @RequestBody ExpenseRequest dto) {
+    public ResponseEntity<ExpenseResponse> updateBy(@PathVariable Long id, @RequestBody ExpenseUpdateRequest dto) {
         return ResponseEntity.ok(this.service.update(id, dto));
     }
 

@@ -4,6 +4,7 @@ import br.com.creditcardcontrol.chart.dto.Data;
 import br.com.creditcardcontrol.expenses.dto.ExpenseInstallmentResponse;
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
+import br.com.creditcardcontrol.expenses.dto.ExpenseUpdateRequest;
 import br.com.creditcardcontrol.expenses.mapper.ExpenseInstallmentMapper;
 import br.com.creditcardcontrol.expenses.mapper.ExpenseMapper;
 import br.com.creditcardcontrol.expenses.model.Expense;
@@ -75,11 +76,15 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     @Transactional
-    public ExpenseResponse update(Long id, ExpenseRequest dto) {
+    public ExpenseResponse update(Long id, ExpenseUpdateRequest dto) {
         Expense expense = repository.findByIdAndUser(id, userService.getCurrentUser())
                 .orElseThrow(() -> new RuntimeException("No expense found with ID - " + id));
 
         expenseMapper.merge(expense, dto);
+
+        verifyInstallmentValue(expense);
+
+        repository.save(expense);
 
         return expenseMapper.mapToDto(expense);
 

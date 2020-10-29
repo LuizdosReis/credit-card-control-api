@@ -2,6 +2,7 @@ package br.com.creditcardcontrol.expenses.mapper;
 
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
+import br.com.creditcardcontrol.expenses.dto.ExpenseUpdateRequest;
 import br.com.creditcardcontrol.expenses.model.Expense;
 import br.com.creditcardcontrol.user.model.User;
 import org.mapstruct.AfterMapping;
@@ -14,10 +15,10 @@ public abstract class ExpenseMapper {
 
     public abstract ExpenseResponse mapToDto(Expense expense);
 
-    public abstract void merge(@MappingTarget Expense expense, ExpenseRequest source);
+    public abstract void merge(@MappingTarget Expense expense, ExpenseUpdateRequest source);
 
     @AfterMapping
-    void fillInstalments(@MappingTarget Expense expense, ExpenseRequest source) {
+    void fillInstalments(@MappingTarget Expense expense, ExpenseUpdateRequest source) {
         expense.getInstallments().forEach(installment -> installment.setExpense(expense));
     }
 
