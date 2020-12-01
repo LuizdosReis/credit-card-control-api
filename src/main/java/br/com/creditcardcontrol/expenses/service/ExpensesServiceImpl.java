@@ -63,7 +63,7 @@ public class ExpensesServiceImpl implements ExpensesService {
     @Transactional(readOnly = true)
     public Page<ExpenseInstallmentResponse> getAll(YearMonth yearMonth, Pageable page) {
         return expenseInstalmentViewRepository
-                .findAllByUser(userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page)
+                .findAllPageableByUser(userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear(), page)
                 .map(expenseInstallmentMapper::toDto);
     }
 
@@ -101,8 +101,10 @@ public class ExpensesServiceImpl implements ExpensesService {
 
     @Override
     public Set<Data> getExpenseData(YearMonth yearMonth) {
-        return repository.findExpenseDataByUserAndYearMonth(
-                userService.getCurrentUser(), yearMonth.getMonth().getValue(), yearMonth.getYear());
+        return expenseInstalmentViewRepository
+                        .findExpenseDataByUserAndYearMonth(userService.getCurrentUser(),
+                                yearMonth.getMonth().getValue(),
+                                yearMonth.getYear());
     }
 
 
