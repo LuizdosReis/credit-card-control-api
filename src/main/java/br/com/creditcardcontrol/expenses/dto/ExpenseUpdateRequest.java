@@ -11,9 +11,9 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpenseRequest {
+public class ExpenseUpdateRequest {
 
     private ZonedDateTime date;
     private BigDecimal value;
-    private Set<InstallmentRequest> installments;
+    private Set<InstallmentUpdateRequest> installments;
 }

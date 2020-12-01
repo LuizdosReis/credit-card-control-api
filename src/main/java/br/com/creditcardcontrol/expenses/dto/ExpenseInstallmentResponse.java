@@ -1,19 +1,22 @@
 package br.com.creditcardcontrol.expenses.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Set;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpenseRequest {
+@EqualsAndHashCode
+public class ExpenseInstallmentResponse {
 
+    private Long expenseId;
     private ZonedDateTime date;
     private BigDecimal value;
-    private Set<InstallmentRequest> installments;
 }

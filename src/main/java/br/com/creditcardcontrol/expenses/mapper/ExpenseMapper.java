@@ -2,19 +2,27 @@ package br.com.creditcardcontrol.expenses.mapper;
 
 import br.com.creditcardcontrol.expenses.dto.ExpenseRequest;
 import br.com.creditcardcontrol.expenses.dto.ExpenseResponse;
+import br.com.creditcardcontrol.expenses.dto.ExpenseUpdateRequest;
 import br.com.creditcardcontrol.expenses.model.Expense;
 import br.com.creditcardcontrol.user.model.User;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
-public interface ExpenseMapper {
+@Mapper(componentModel = "spring", uses = InstallmentMapper.class)
+public abstract class ExpenseMapper {
 
-    ExpenseResponse mapToDto(Expense expense);
-    
+    public abstract ExpenseResponse mapToDto(Expense expense);
+
+    public abstract void merge(@MappingTarget Expense expense, ExpenseUpdateRequest source);
+
+    @AfterMapping
+    void fillInstalments(@MappingTarget Expense expense, ExpenseUpdateRequest source) {
+        expense.getInstallments().forEach(installment -> installment.setExpense(expense));
+    }
+
     @Mapping(target = "id", ignore = true)
-    Expense mapToModel(ExpenseRequest dto, User user);
+    public abstract Expense toEntity(ExpenseRequest dto, User user);
 
-    void merge(@MappingTarget Expense expense, ExpenseRequest source);
 }
